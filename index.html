@@ -16,15 +16,15 @@
             --selen-accent: #002FA7;
             --selen-accent-dark: #001f73;
             --selen-blue: #002FA7;
-            --selen-text: #5f6368;
-            --selen-strong: #202124;
+            --selen-text: #222;
+            --selen-strong: #111;
             --selen-border: #ddd;
             --selen-feature-bg: #eef3ff;
             --selen-feature-border: #9db7ff;
         }
 
         body {
-            font-family: 'Arial Rounded MT Bold', Verdana, Arial, sans-serif;
+            font-family: Georgia, 'Times New Roman', Times, serif;
             color: var(--selen-text);
             width: auto;
             max-width: none;
@@ -61,7 +61,8 @@
         }
 
         .site-nav a {
-            color: #4a4f55;
+            font-family: 'Arial Rounded MT Bold', Verdana, Arial, sans-serif;
+            color: #202124;
             font-size: 1.05rem;
             font-weight: 700;
             text-decoration: none;
@@ -74,11 +75,11 @@
 
         .page-shell {
             display: grid;
-            grid-template-columns: 245px minmax(0, 860px);
-            gap: 52px;
-            max-width: 1160px;
+            grid-template-columns: 245px minmax(0, 1fr);
+            gap: 44px;
+            max-width: 1580px;
             margin: 0 auto;
-            padding: 18px 28px 70px;
+            padding: 18px 36px 70px;
         }
 
         .profile-sidebar {
@@ -105,6 +106,7 @@
         }
 
         .sidebar-name {
+            font-family: 'Arial Rounded MT Bold', Verdana, Arial, sans-serif;
             color: var(--selen-strong);
             font-size: 1.12rem;
             line-height: 1.25;
@@ -127,6 +129,7 @@
         }
 
         .sidebar-role {
+            font-family: 'Arial Rounded MT Bold', Verdana, Arial, sans-serif;
             color: var(--selen-text);
             font-size: 0.92rem;
             line-height: 1.45;
@@ -140,6 +143,7 @@
 
         .sidebar-links a,
         .sidebar-links span {
+            font-family: 'Arial Rounded MT Bold', Verdana, Arial, sans-serif;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -262,7 +266,7 @@
         }
 
         .category-title {
-            font-family: 'Arial Rounded MT Bold', Verdana, Arial, sans-serif;
+            font-family: Georgia, 'Times New Roman', Times, serif;
             font-size: 1.02em;
             color: var(--selen-accent);
             margin: 0;
@@ -301,7 +305,7 @@
         }
 
         .category-count {
-            font-family: 'Arial Rounded MT Bold', Verdana, Arial, sans-serif;
+            font-family: Georgia, 'Times New Roman', Times, serif;
             font-size: 0.78em;
             font-weight: 600;
             color: #6b7280;
@@ -345,12 +349,13 @@
         }
 
         .pub-thumb {
-            width: 240px;
-            min-width: 240px;
-            height: 135px;
+            width: clamp(220px, 24vw, 340px);
+            min-width: clamp(220px, 24vw, 340px);
+            height: auto;
+            max-height: 190px;
             border-radius: 6px;
             border: 1px solid #e5e7eb;
-            object-fit: cover;
+            object-fit: contain;
             background: #f8fafc;
         }
 
@@ -414,7 +419,7 @@
 
         h1,
         h2 {
-            color: #4a4f55;
+            color: var(--selen-accent);
         }
 
         h2 {
@@ -426,6 +431,22 @@
 
         .main-content > h2:first-child {
             margin-top: 0;
+        }
+
+        .blog-list {
+            margin-top: 10px;
+            margin-bottom: 12px;
+            padding-left: 18px;
+        }
+
+        .blog-list li {
+            white-space: nowrap;
+            line-height: 1.3;
+            font-size: 0.95rem;
+        }
+
+        .blog-list a {
+            white-space: nowrap;
         }
 
         @media (max-width: 720px) {
@@ -468,6 +489,10 @@
                 font-size: 0.72em;
             }
 
+            .blog-list li {
+                white-space: normal;
+            }
+
             .category-title {
                 font-size: 1em;
             }
@@ -508,7 +533,7 @@
             <p>
 I am a <b>fourth-year</b> undergraduate student in the <b>Hongshen Stand-Out Class of Computer Science</b> at <b>Chongqing University</b>. I am fortunate to have closely collaborated with <b>Prof. <a href="https://scholar.google.com/citations?user=KomQOFkAAAAJ&hl=zh-CN&oi=ao">Lei Feng</a></b> during my undergraduate studies and will be joining <b>Peking University</b>, advised by <b>Prof. <a href="https://scholar.google.com/citations?user=-5juAR0AAAAJ&hl=zh-CN">Li Yuan</a></b>.            </p>
             <p>
-<b>My core research focuses</b> on visual representations and language priors. Vision directly depicts the physical appearance of the "real world"; while language, as the refinement and abstraction of visual information, constructs the knowledge landscape of the "human world." I firmly believe that bridging the gap between the language modality, which carries "human world" prior knowledge, and the visual modality, which directly reflects the "real world," is a crucial step towards achieving general artificial intelligence. This not only involves finding effective mapping paths between modalities but also concerns how to leverage their respective strengths to build a unified framework collaboratively.            </p>
+My core research focuses on visual representations and language priors. Vision directly depicts the physical appearance of the "real world"; while language, as the refinement and abstraction of visual information, constructs the knowledge landscape of the "human world." I firmly believe that bridging the gap between the language modality, which carries "human world" prior knowledge, and the visual modality, which directly reflects the "real world," is a crucial step towards achieving general artificial intelligence. This not only involves finding effective mapping paths between modalities but also concerns how to leverage their respective strengths to build a unified framework collaboratively.            </p>
             <p>
                 <b>Currently, I am dedicated to building native unified multimodal models.</b>
             </p>
@@ -699,7 +724,7 @@ I am a <b>fourth-year</b> undergraduate student in the <b>Hongshen Stand-Out Cla
 </details>
 
 <h2 id="blog">Blog</h2>
-            <ul>
+            <ul class="blog-list">
                 <li>
                     <b><a href="https://x.com/purshow04/status/2042451108283761154" target="_blank">The (Possible) Future of Multimodal Understanding: From Describing the World to Entering the World</a></b>
                 </li>
