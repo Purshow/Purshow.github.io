@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta content="IE=5.0000" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Yuwei Niu's home page">
     <link rel="icon" media="(prefers-color-scheme:dark)" href="./assets/imgs/Luffy.jpg" type="image/jpg" />
     <link rel="icon" media="(prefers-color-scheme:light)" href="./assets/imgs/Luffy.jpg" type="image/jpg" />
@@ -472,7 +473,70 @@
 
             .profile-sidebar {
                 position: static;
-                margin-bottom: 34px;
+                display: grid;
+                grid-template-columns: 82px minmax(0, 1fr);
+                grid-template-areas:
+                    "photo name"
+                    "photo role"
+                    "links links";
+                column-gap: 14px;
+                align-items: center;
+                margin-bottom: 26px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid var(--selen-border);
+            }
+
+            .profile-pic {
+                grid-area: photo;
+                width: 72px;
+                height: 72px;
+                padding: 3px;
+                margin: 0;
+            }
+
+            .profile-pic:hover {
+                transform: none;
+            }
+
+            .sidebar-name {
+                grid-area: name;
+                margin: 0 0 4px;
+                font-size: 1.05rem;
+                line-height: 1.2;
+            }
+
+            .sidebar-role {
+                grid-area: role;
+                margin: 0;
+                font-size: 0.88rem;
+                line-height: 1.35;
+            }
+
+            .sidebar-links {
+                grid-area: links;
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                padding-top: 14px;
+                padding-bottom: 2px;
+                scrollbar-width: none;
+            }
+
+            .sidebar-links::-webkit-scrollbar {
+                display: none;
+            }
+
+            .sidebar-links a,
+            .sidebar-links span {
+                flex: 0 0 auto;
+                gap: 7px;
+                padding: 5px 9px;
+                border: 1px solid var(--selen-border);
+                border-radius: 999px;
+                background: #fff;
+                font-size: 0.82rem;
+                line-height: 1.1;
+                white-space: nowrap;
             }
 
             .publication {
