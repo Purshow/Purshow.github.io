@@ -1,0 +1,48 @@
+name: Update GitHub Stars
+
+on:
+  schedule:
+    # 00:00 UTC = 08:00 Asia/Shanghai every day.
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: github-stars
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch star counts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/update_github_stars.py
+      - name: Commit updated badges
+        run: |
+          if git diff --quiet -- index.html; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Update GitHub star counts'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      # GITHUB_TOKEN pushes do not automatically trigger a Pages build.
+      # Request one explicitly, also allowing a rerun to recover a failed build request.
+      - name: Request GitHub Pages build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"

@@ -913,34 +913,6 @@ If you have questions about my research, or if you have tried to reach me throug
         </main>
     </div>
 
-    <script>
-        (function () {
-            const formatStars = (count) => {
-                if (count >= 1000) {
-                    const value = count / 1000;
-                    return `${value >= 10 ? Math.round(value) : value.toFixed(1)}k`;
-                }
-                return String(count);
-            };
-
-            const cache = {};
-            document.querySelectorAll("[data-github-repo]").forEach((el) => {
-                const repo = el.getAttribute("data-github-repo");
-                if (!cache[repo]) {
-                    cache[repo] = fetch(`https://api.github.com/repos/${repo}`)
-                        .then((response) => response.ok ? response.json() : null)
-                        .then((data) => data && typeof data.stargazers_count === "number" ? data.stargazers_count : null)
-                        .catch(() => null);
-                }
-
-                cache[repo].then((stars) => {
-                    if (stars !== null) {
-                        el.innerHTML = `<i class="fas fa-star"></i> ${formatStars(stars)}`;
-                    }
-                });
-            });
-        }());
-    </script>
     <!-- Cloudflare Web Analytics -->
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "328bccc8ad7940efbfcff12016c0bd5a"}'></script>
     <!-- End Cloudflare Web Analytics -->
