@@ -7,6 +7,15 @@
     <link rel="icon" href="./assets/imgs/Luffy.jpg" type="image/jpeg" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Yuwei Niu's Homepage</title>
+    <script>
+        // Resolve the theme before first paint: a saved choice wins, otherwise follow the system.
+        (function () {
+            let saved = null;
+            try { saved = localStorage.getItem('theme'); } catch (e) {}
+            const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.dataset.theme = saved === 'light' || saved === 'dark' ? saved : system;
+        })();
+    </script>
     <style>
         :root {
             --accent: #002FA7;
@@ -18,9 +27,35 @@
             --muted: #5f6670;
             --border: #e5e7eb;
             --surface: #f7f8fa;
+            --bg: #fff;
+            --nav-bg: rgba(255, 255, 255, 0.92);
+            --icon: #6b7280;
             --nav-height: 60px;
+            color-scheme: light;
             --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
             --font-text: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+        }
+
+        :root[data-theme="dark"] {
+            --accent: #8aa9ff;
+            --accent-dark: #b3c7ff;
+            --accent-soft: rgba(138, 169, 255, 0.12);
+            --accent-border: rgba(138, 169, 255, 0.35);
+            --text: #d6dae1;
+            --strong: #f1f3f6;
+            --muted: #98a1ad;
+            --border: #2b3038;
+            --surface: #1a1d23;
+            --bg: #111317;
+            --nav-bg: rgba(17, 19, 23, 0.88);
+            --icon: #98a1ad;
+            color-scheme: dark;
+        }
+
+        /* Teasers are drawn for white paper; dim them slightly instead of inverting. */
+        :root[data-theme="dark"] .pub-thumb,
+        :root[data-theme="dark"] .lightbox img {
+            filter: brightness(0.92);
         }
 
         *,
@@ -36,7 +71,7 @@
 
         body {
             margin: 0;
-            background: #fff;
+            background: var(--bg);
             color: var(--text);
             font-family: var(--font-text);
             font-size: 17px;
@@ -70,7 +105,7 @@
             position: sticky;
             top: 0;
             z-index: 10;
-            background: rgba(255, 255, 255, 0.92);
+            background: var(--nav-bg);
             border-bottom: 1px solid var(--border);
             backdrop-filter: saturate(180%) blur(10px);
             -webkit-backdrop-filter: saturate(180%) blur(10px);
@@ -99,7 +134,32 @@
             text-decoration: none;
         }
 
+        .theme-toggle {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            margin-left: auto;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: transparent;
+            color: var(--muted);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-border);
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
         .nav-links {
+            flex: 0 1 auto;
+            min-width: 0;
             display: flex;
             gap: 28px;
             height: 100%;
@@ -206,7 +266,7 @@
 
         .sidebar-links i {
             width: 18px;
-            color: #6b7280;
+            color: var(--icon);
             text-align: center;
         }
 
@@ -230,7 +290,7 @@
             display: block;
             width: 16px;
             height: 16px;
-            fill: #4f565d;
+            fill: var(--strong);
         }
 
         .main-content {
@@ -318,11 +378,28 @@
         }
 
         .timeline li {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 10px 0;
+            display: grid;
+            grid-template-columns: 44px minmax(0, 1fr) auto;
+            grid-template-areas: "logo main date";
+            column-gap: 16px;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .tl-logo {
+            grid-area: logo;
+            width: 44px;
+            height: 44px;
+            padding: 5px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            /* Logos are drawn for light backgrounds, so the tile stays white in dark mode. */
+            background: #fff;
+            object-fit: contain;
+        }
+
+        .tl-main {
+            grid-area: main;
         }
 
         .timeline li + li {
@@ -341,7 +418,7 @@
         }
 
         .tl-date {
-            flex: 0 0 auto;
+            grid-area: date;
             color: var(--muted);
             font-family: var(--font-ui);
             font-size: 0.88rem;
@@ -382,8 +459,64 @@
             padding: 4px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            background: var(--surface);
+            background: #fff;
             object-fit: contain;
+            cursor: zoom-in;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pub-thumb:hover,
+        .pub-thumb:focus-visible {
+            border-color: var(--accent-border);
+            box-shadow: 0 4px 14px rgba(0, 47, 167, 0.12);
+            outline: none;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(8, 10, 14, 0.86);
+            cursor: zoom-out;
+            animation: lightbox-in 0.18s ease;
+        }
+
+        .lightbox[hidden] {
+            display: none;
+        }
+
+        .lightbox img {
+            max-width: min(1600px, 100%);
+            max-height: 100%;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            border: 0;
+            background: none;
+            color: #fff;
+            font-size: 1.6rem;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes lightbox-in {
+            from {
+                opacity: 0;
+            }
         }
 
         .pub-content {
@@ -662,6 +795,32 @@
                 font-size: 0.88rem;
             }
 
+            /* One swipeable row of contact chips instead of a tall wrapped block. */
+            .sidebar-links {
+                flex-wrap: nowrap;
+                margin: 0 -16px;
+                padding: 16px 16px 2px;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+                -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+                mask-image: linear-gradient(to right, #000 85%, transparent);
+            }
+
+            .sidebar-links::-webkit-scrollbar {
+                display: none;
+            }
+
+            .sidebar-links.scrolled-end {
+                -webkit-mask-image: none;
+                mask-image: none;
+            }
+
+            .sidebar-links > a,
+            .sidebar-links > span {
+                flex: 0 0 auto;
+            }
+
             h2 {
                 font-size: 1.25rem;
             }
@@ -677,8 +836,18 @@
             }
 
             .timeline li {
-                flex-direction: column;
-                gap: 2px;
+                grid-template-columns: 40px minmax(0, 1fr);
+                grid-template-areas:
+                    "logo main"
+                    "logo date";
+                column-gap: 14px;
+                align-items: start;
+            }
+
+            .tl-logo {
+                width: 40px;
+                height: 40px;
+                margin-top: 3px;
             }
 
             .site-footer {
@@ -701,6 +870,7 @@
                 <a href="#blog">Blog</a>
                 <a href="#contact">Contact</a>
             </div>
+            <button class="theme-toggle" type="button" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
         </div>
     </nav>
 
@@ -714,7 +884,7 @@
                 <span><i class="fas fa-building-columns"></i> Peking University</span>
                 <a href="mailto:niuyuwei04@gmail.com"><i class="fas fa-envelope"></i> Email</a>
                 <a href="https://scholar.google.com/citations?user=VaYRTxEAAAAJ&hl=zh-CN&oi=ao" target="_blank"><i class="fas fa-graduation-cap" style="color: #4285F4;"></i> Google Scholar</a>
-                <a href="https://github.com/purshow" target="_blank"><i class="fab fa-github" style="color: #171516;"></i> GitHub</a>
+                <a href="https://github.com/purshow" target="_blank"><i class="fab fa-github" style="color: var(--strong);"></i> GitHub</a>
                 <a href="https://x.com/purshow04" target="_blank"><span class="x-icon" aria-hidden="true"><svg viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48h145.6l100.5 132.9L389.2 48zm-24.8 373.8h39.1L151.1 88h-42L364.4 421.8z"></path></svg></span> X (Twitter)</a>
                 <a href="https://www.xiaohongshu.com/user/profile/630de7270000000012000eb3?xsec_token=YBZK_W7tvWKkIAr08k9onZX31fFvRF8MedkAZ-mzydIGE=&amp;xsec_source=app_share&amp;&amp;apptime=1778509328&amp;shareRedId=ODkyREg8NkA2NzUyOTgwNjc1OTc0Skg8&amp;share_id=492f35a01f3c4eadbb4c68c10cc1cceb&amp;xhsshare=CopyLink" target="_blank"><i class="fas fa-book" style="color: #d23737;"></i> RedNote</a>
                 <a href="https://www.zhihu.com/people/cao-sheng-fan-ren-90" target="_blank"><img class="sidebar-icon-img" src="assets/imgs/zhihu.png" alt=""> Zhihu</a>
@@ -724,7 +894,8 @@
 
         <main class="main-content">
             <section id="about">
-                <h2>About Me</h2>
+                <details class="collapsible" open>
+                <summary><h2>About Me<i class="fas fa-chevron-down chevron"></i></h2></summary>
                 <p>
                     I am a first-year M.S. student at <b>Peking University</b>, advised by <b>Prof. <a href="https://scholar.google.com/citations?user=-5juAR0AAAAJ&hl=zh-CN">Li Yuan</a></b>.
                     I have also been fortunate to work closely with <b>Prof. <a href="https://scholar.google.com/citations?user=KomQOFkAAAAJ&hl=zh-CN&oi=ao">Lei Feng</a></b> and <b>Prof. <a href="https://scholar.google.com/citations?hl=zh-CN&user=lc45xlcAAAAJ&view_op=list_works&sortby=pubdate">Ziwei Liu</a></b>.
@@ -738,46 +909,55 @@
                 <p class="callout">
                     🤝 I am eager to discuss potential collaborations and am actively seeking industry internship opportunities in multimodal models. Please feel free to contact me via <a href="mailto:niuyuwei04@gmail.com">email</a> or <b>WeChat: purshow</b> if you are interested.
                 </p>
+                </details>
             </section>
 
             <section id="education">
-                <h2>Education</h2>
+                <details class="collapsible" open>
+                <summary><h2>Education<i class="fas fa-chevron-down chevron"></i></h2></summary>
                 <ul class="timeline">
                     <li>
-                        <div>
+                        <img class="tl-logo" src="assets/logos/pku.png" alt="">
+                        <div class="tl-main">
                             <span class="tl-org">Peking University</span>
                             <span class="tl-role">M.S. in Computer Science, School of Electronic and Computer Engineering</span>
                         </div>
                         <span class="tl-date">2026 – 2029</span>
                     </li>
                     <li>
-                        <div>
+                        <img class="tl-logo" src="assets/logos/cqu.png" alt="">
+                        <div class="tl-main">
                             <span class="tl-org">Chongqing University</span>
                             <span class="tl-role">B.Eng. in Computer Science, Hongshen Stand-Out Class</span>
                         </div>
                         <span class="tl-date">2022 – 2026</span>
                     </li>
                 </ul>
+                </details>
             </section>
 
             <section id="experience">
-                <h2>Experience</h2>
+                <details class="collapsible" open>
+                <summary><h2>Experience<i class="fas fa-chevron-down chevron"></i></h2></summary>
                 <ul class="timeline">
                     <li>
-                        <div>
+                        <img class="tl-logo" src="assets/logos/ntu.png" alt="">
+                        <div class="tl-main">
                             <span class="tl-org">NTU LMMs-Lab</span>
                             <span class="tl-role">Visiting Student / Research Intern</span>
                         </div>
                         <span class="tl-date">Mar 2026 – Now</span>
                     </li>
                     <li>
-                        <div>
-                            <span class="tl-org">Bytedance Seed-Vision</span>
+                        <img class="tl-logo" src="assets/logos/bytedance.png" alt="">
+                        <div class="tl-main">
+                            <span class="tl-org">ByteDance Seed-Vision</span>
                             <span class="tl-role">Research Intern</span>
                         </div>
                         <span class="tl-date">Sep 2025 – Mar 2026</span>
                     </li>
                 </ul>
+                </details>
             </section>
 
             <section id="publications">
@@ -789,7 +969,7 @@
 
                 <ul class="output-list">
                     <li class="publication">
-                        <img class="pub-thumb" src="assets/paper/WISE.png" alt="WISE teaser" loading="lazy">
+                        <img class="pub-thumb" src="assets/paper/WISE-thumb.webp" data-full="assets/paper/WISE.webp" alt="WISE teaser" loading="lazy">
                         <div class="pub-content">
                             <span class="pub-badge">ICML 2026</span>
                             <div class="pub-title">WISE: A World Knowledge-Informed Semantic Evaluation for Text-to-Image Generation</div>
@@ -802,7 +982,7 @@
                     </li>
 
                     <li class="publication">
-                        <img class="pub-thumb" src="assets/paper/unisandbox.png" alt="UniSandBox teaser" loading="lazy">
+                        <img class="pub-thumb" src="assets/paper/unisandbox-thumb.webp" data-full="assets/paper/unisandbox.webp" alt="UniSandBox teaser" loading="lazy">
                         <div class="pub-content">
                             <span class="pub-badge">EMNLP 2026</span>
                             <div class="pub-title">Does Understanding Inform Generation in Unified Multimodal Models? From Analysis to Path Forward</div>
@@ -815,20 +995,20 @@
                     </li>
 
                     <li class="publication">
-                        <img class="pub-thumb" src="assets/paper/Langbridge.png" alt="LangBridge teaser" loading="lazy">
+                        <img class="pub-thumb" src="assets/paper/lookback-thumb.webp" data-full="assets/paper/lookback.webp" alt="Look-Back teaser" loading="lazy">
                         <div class="pub-content">
-                            <span class="pub-badge">ICCV 2025</span>
-                            <div class="pub-title">LangBridge: Interpreting Image as a Combination of Language Embeddings</div>
-                            <div class="authors">Jiaqi Liao*, <u><b>Yuwei Niu*</b></u>, Fanqing Meng*, Hao Li, Changyao Tian, Yinuo Du, Yuwen Xiong, Dianqi Li, Xizhou Zhu, Li Yuan, Jifeng Dai†, Yu Cheng†.</div>
+                            <span class="pub-badge">AAAI 2026</span>
+                            <div class="pub-title">Look-Back: Implicit Visual Re-focusing in MLLM Reasoning</div>
+                            <div class="authors">Shuo Yang*, <u><b>Yuwei Niu*</b></u>, Yuyang Liu†, Yang Ye, Bin Lin, Li Yuan†.</div>
                             <div class="links">
-                                <a href="https://arxiv.org/abs/2503.19404" target="_blank"><i class="far fa-file-pdf"></i> Paper</a>
-                                <a href="https://github.com/CurryX-001/LangBridge" target="_blank"><i class="fab fa-github"></i> Code</a>
+                                <a href="https://arxiv.org/abs/2507.03019" target="_blank"><i class="far fa-file-pdf"></i> Paper</a>
+                                <a href="https://github.com/PKU-YuanGroup/Look-Back" target="_blank"><i class="fab fa-github"></i> Code</a>
                             </div>
                         </div>
                     </li>
 
                     <li class="publication">
-                        <img class="pub-thumb" src="assets/paper/srum_teaser.png" alt="SRUM teaser" loading="lazy">
+                        <img class="pub-thumb" src="assets/paper/srum_teaser-thumb.webp" data-full="assets/paper/srum_teaser.webp" alt="SRUM teaser" loading="lazy">
                         <div class="pub-content">
                             <span class="pub-badge">ECCV 2026</span>
                             <div class="pub-title">SRUM: Fine-Grained Self-Rewarding for Unified Multimodal Models</div>
@@ -841,7 +1021,20 @@
                     </li>
 
                     <li class="publication">
-                        <img class="pub-thumb" src="assets/paper/bdetclip.png" alt="BDetCLIP teaser" loading="lazy">
+                        <img class="pub-thumb" src="assets/paper/Langbridge-thumb.webp" data-full="assets/paper/Langbridge.webp" alt="LangBridge teaser" loading="lazy">
+                        <div class="pub-content">
+                            <span class="pub-badge">ICCV 2025</span>
+                            <div class="pub-title">LangBridge: Interpreting Image as a Combination of Language Embeddings</div>
+                            <div class="authors">Jiaqi Liao*, <u><b>Yuwei Niu*</b></u>, Fanqing Meng*, Hao Li, Changyao Tian, Yinuo Du, Yuwen Xiong, Dianqi Li, Xizhou Zhu, Li Yuan, Jifeng Dai†, Yu Cheng†.</div>
+                            <div class="links">
+                                <a href="https://arxiv.org/abs/2503.19404" target="_blank"><i class="far fa-file-pdf"></i> Paper</a>
+                                <a href="https://github.com/CurryX-001/LangBridge" target="_blank"><i class="fab fa-github"></i> Code</a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="publication">
+                        <img class="pub-thumb" src="assets/paper/bdetclip-thumb.webp" data-full="assets/paper/bdetclip.webp" alt="BDetCLIP teaser" loading="lazy">
                         <div class="pub-content">
                             <span class="pub-badge">ICML 2025</span>
                             <div class="pub-title">Test-Time Multimodal Backdoor Detection by Contrastive Prompting</div>
@@ -849,19 +1042,6 @@
                             <div class="links">
                                 <a href="https://arxiv.org/abs/2405.15269" target="_blank"><i class="far fa-file-pdf"></i> Paper</a>
                                 <a href="https://github.com/Purshow/BDetCLIP" target="_blank"><i class="fab fa-github"></i> Code</a>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li class="publication">
-                        <img class="pub-thumb" src="assets/paper/lookback.png" alt="Look-Back teaser" loading="lazy">
-                        <div class="pub-content">
-                            <span class="pub-badge">AAAI 2026</span>
-                            <div class="pub-title">Look-Back: Implicit Visual Re-focusing in MLLM Reasoning</div>
-                            <div class="authors">Shuo Yang*, <u><b>Yuwei Niu*</b></u>, Yuyang Liu†, Yang Ye, Bin Lin, Li Yuan†.</div>
-                            <div class="links">
-                                <a href="https://arxiv.org/abs/2507.03019" target="_blank"><i class="far fa-file-pdf"></i> Paper</a>
-                                <a href="https://github.com/PKU-YuanGroup/Look-Back" target="_blank"><i class="fab fa-github"></i> Code</a>
                             </div>
                         </div>
                     </li>
@@ -874,7 +1054,7 @@
                 <summary><h2>Tech Reports <span class="count">3</span><i class="fas fa-chevron-down chevron"></i></h2></summary>
                 <ul class="output-list">
                     <li class="publication">
-                        <img class="pub-thumb" src="assets/proj/sensenova-u1.5.png" alt="SenseNova-U series teaser" loading="lazy">
+                        <img class="pub-thumb" src="assets/proj/sensenova-u1.5-thumb.webp" data-full="assets/proj/sensenova-u1.5.webp" alt="SenseNova-U series teaser" loading="lazy">
                         <div class="pub-content">
                             <span class="pub-badge">Tech Report</span>
                             <div class="pub-title">SenseNova-U Series</div>
@@ -891,7 +1071,7 @@
                     </li>
 
                     <li class="publication">
-                        <img class="pub-thumb" src="assets/proj/neo-ov.png" alt="NEO-ov teaser" loading="lazy">
+                        <img class="pub-thumb" src="assets/proj/neo-ov-thumb.webp" data-full="assets/proj/neo-ov.webp" alt="NEO-ov teaser" loading="lazy">
                         <div class="pub-content">
                             <span class="pub-badge">Tech Report</span>
                             <div class="pub-title">From Pixels to Words -- Towards Native One-Vision Models at Scale</div>
@@ -905,7 +1085,7 @@
                     </li>
 
                     <li class="publication">
-                        <img class="pub-thumb" src="assets/proj/uniworld.png" alt="UniWorld series teaser" loading="lazy">
+                        <img class="pub-thumb" src="assets/proj/uniworld-thumb.webp" data-full="assets/proj/uniworld.webp" alt="UniWorld series teaser" loading="lazy">
                         <div class="pub-content">
                             <span class="pub-badge">Tech Report</span>
                             <div class="pub-title">UniWorld Series</div>
@@ -925,7 +1105,8 @@
             </section>
 
             <section id="blog">
-                <h2>Blog</h2>
+                <details class="collapsible" open>
+                <summary><h2>Blog<i class="fas fa-chevron-down chevron"></i></h2></summary>
                 <ul class="blog-list">
                     <li>
                         <a href="https://github.com/Purshow/Purshow_Notes" target="_blank">Purshow's Notes</a>
@@ -944,6 +1125,7 @@
                 <p>
                     I occasionally write blogs to share my thoughts. Chinese readers can find the full archive on my <a href="https://www.xiaohongshu.com/user/profile/630de7270000000012000eb3?xsec_token=YBZK_W7tvWKkIAr08k9onZX31fFvRF8MedkAZ-mzydIGE=&amp;xsec_source=app_share&amp;&amp;apptime=1778509328&amp;shareRedId=ODkyREg8NkA2NzUyOTgwNjc1OTc0Skg8&amp;share_id=492f35a01f3c4eadbb4c68c10cc1cceb&amp;xhsshare=CopyLink" target="_blank">RedNote</a>.
                 </p>
+                </details>
             </section>
             <!--
 <h2>Other Works</h2>
@@ -1015,14 +1197,17 @@
 </ul> -->
 
             <section id="personality">
-                <h2>Personality</h2>
+                <details class="collapsible" open>
+                <summary><h2>Personality<i class="fas fa-chevron-down chevron"></i></h2></summary>
                 <p>
                     Beyond science, I am deeply passionate about literature, poetry, anime, films, music, and all forms of art that embody human creativity. I firmly believe these are the reasons for our existence. Currently, I am deeply captivated by the literature of Dostoevsky and Tolstoy, and R&amp;B music (such as Prince, Stevie Wonder, D'Angelo, David Tao, and Khalil Fong).
                 </p>
+                </details>
             </section>
 
             <section id="contact">
-                <h2>Contact Me</h2>
+                <details class="collapsible" open>
+                <summary><h2>Contact Me<i class="fas fa-chevron-down chevron"></i></h2></summary>
                 <p>
                     I believe good ideas and meaningful progress often come from open discussion and thoughtful disagreement. If you have comments on my work, different perspectives, or new ideas you would like to share, I would be very happy to hear from you.
                 </p>
@@ -1036,6 +1221,7 @@
                     Please note that I am only interested in discussing intriguing problems and insights, not metrics. If you are inclined to discuss publication or citation numbers, rely on numerical indicators to quantify individuals, or compare me to others, please refrain from contacting me.
                 </p> -->
                 <p>My preferred email: <a href="mailto:niuyuwei04@gmail.com">niuyuwei04@gmail.com</a></p>
+                </details>
             </section>
         </main>
     </div>
@@ -1043,6 +1229,11 @@
     <footer class="site-footer">
         © 2026 Yuwei Niu
     </footer>
+
+    <div class="lightbox" hidden>
+        <button class="lightbox-close" type="button" aria-label="Close"><i class="fas fa-xmark"></i></button>
+        <img alt="">
+    </div>
 
     <script>
         // Highlight the nav link of the section currently under the sticky bar.
@@ -1089,6 +1280,94 @@
                 if (details) details.open = true;
             }));
             expandTarget();
+        })();
+
+        // Light/dark toggle. Picking the system's own theme clears the saved choice,
+        // so the page goes back to following the system.
+        (function () {
+            const root = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const icon = button.querySelector('i');
+            const media = matchMedia('(prefers-color-scheme: dark)');
+
+            function render() {
+                const dark = root.dataset.theme === 'dark';
+                icon.className = dark ? 'fas fa-sun' : 'fas fa-moon';
+                button.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+            }
+
+            function saved() {
+                try { return localStorage.getItem('theme'); } catch (e) { return null; }
+            }
+
+            button.addEventListener('click', () => {
+                const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+                root.dataset.theme = next;
+                try {
+                    if (next === (media.matches ? 'dark' : 'light')) localStorage.removeItem('theme');
+                    else localStorage.setItem('theme', next);
+                } catch (e) {}
+                render();
+            });
+
+            media.addEventListener('change', () => {
+                if (saved()) return;
+                root.dataset.theme = media.matches ? 'dark' : 'light';
+                render();
+            });
+
+            render();
+        })();
+
+        // Drop the right-edge fade once the contact chips are scrolled to the end.
+        (function () {
+            const strip = document.querySelector('.sidebar-links');
+            function update() {
+                strip.classList.toggle('scrolled-end', strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2);
+            }
+            strip.addEventListener('scroll', update, { passive: true });
+            window.addEventListener('resize', update);
+            update();
+        })();
+
+        // Click a teaser to view it full size.
+        (function () {
+            const box = document.querySelector('.lightbox');
+            const full = box.querySelector('img');
+            let opener = null;
+
+            function open(thumb) {
+                opener = thumb;
+                full.src = thumb.dataset.full || thumb.src;
+                full.alt = thumb.alt;
+                box.hidden = false;
+                document.body.style.overflow = 'hidden';
+                box.querySelector('.lightbox-close').focus();
+            }
+
+            function close() {
+                box.hidden = true;
+                full.removeAttribute('src');
+                document.body.style.overflow = '';
+                if (opener) opener.focus();
+            }
+
+            document.querySelectorAll('.pub-thumb').forEach(thumb => {
+                thumb.tabIndex = 0;
+                thumb.setAttribute('role', 'button');
+                thumb.addEventListener('click', () => open(thumb));
+                thumb.addEventListener('keydown', event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        open(thumb);
+                    }
+                });
+            });
+
+            box.addEventListener('click', close);
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape' && !box.hidden) close();
+            });
         })();
     </script>
 
