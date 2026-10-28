@@ -795,30 +795,30 @@
                 font-size: 0.88rem;
             }
 
-            /* One swipeable row of contact chips instead of a tall wrapped block. */
+            /* Icon-only contact buttons so they all fit without scrolling. */
             .sidebar-links {
-                flex-wrap: nowrap;
-                margin: 0 -16px;
-                padding: 16px 16px 2px;
-                overflow-x: auto;
-                scrollbar-width: none;
-                -webkit-overflow-scrolling: touch;
-                -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
-                mask-image: linear-gradient(to right, #000 85%, transparent);
+                justify-content: flex-start;
+                gap: 10px;
+                padding-top: 16px;
             }
 
-            .sidebar-links::-webkit-scrollbar {
+            .sidebar-links > a {
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                padding: 0;
+            }
+
+            .sidebar-links .link-label {
                 display: none;
             }
 
-            .sidebar-links.scrolled-end {
-                -webkit-mask-image: none;
-                mask-image: none;
-            }
-
-            .sidebar-links > a,
-            .sidebar-links > span {
-                flex: 0 0 auto;
+            .sidebar-links i,
+            .sidebar-icon-img,
+            .x-icon {
+                width: 17px;
+                flex-basis: 17px;
+                font-size: 17px;
             }
 
             h2 {
@@ -880,15 +880,13 @@
             <h1 class="sidebar-name">Yuwei Niu <span class="cn-name">牛宇威</span></h1>
             <p class="sidebar-role">M.S. @ Peking University.</p>
             <div class="sidebar-links">
-                <span><i class="fas fa-location-dot"></i> Shenzhen, China</span>
-                <span><i class="fas fa-building-columns"></i> Peking University</span>
-                <a href="mailto:niuyuwei04@gmail.com"><i class="fas fa-envelope"></i> Email</a>
-                <a href="https://scholar.google.com/citations?user=VaYRTxEAAAAJ&hl=zh-CN&oi=ao" target="_blank"><i class="fas fa-graduation-cap" style="color: #4285F4;"></i> Google Scholar</a>
-                <a href="https://github.com/purshow" target="_blank"><i class="fab fa-github" style="color: var(--strong);"></i> GitHub</a>
-                <a href="https://x.com/purshow04" target="_blank"><span class="x-icon" aria-hidden="true"><svg viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48h145.6l100.5 132.9L389.2 48zm-24.8 373.8h39.1L151.1 88h-42L364.4 421.8z"></path></svg></span> X (Twitter)</a>
-                <a href="https://www.xiaohongshu.com/user/profile/630de7270000000012000eb3?xsec_token=YBZK_W7tvWKkIAr08k9onZX31fFvRF8MedkAZ-mzydIGE=&amp;xsec_source=app_share&amp;&amp;apptime=1778509328&amp;shareRedId=ODkyREg8NkA2NzUyOTgwNjc1OTc0Skg8&amp;share_id=492f35a01f3c4eadbb4c68c10cc1cceb&amp;xhsshare=CopyLink" target="_blank"><i class="fas fa-book" style="color: #d23737;"></i> RedNote</a>
-                <a href="https://www.zhihu.com/people/cao-sheng-fan-ren-90" target="_blank"><img class="sidebar-icon-img" src="assets/imgs/zhihu.png" alt=""> Zhihu</a>
-                <a href="assets/imgs/wechat_purshow.jpg" target="_blank"><img class="sidebar-icon-img" src="assets/imgs/wechat.png" alt=""> WeChat</a>
+                <a href="mailto:niuyuwei04@gmail.com" title="Email" aria-label="Email"><i class="fas fa-envelope"></i> <span class="link-label">Email</span></a>
+                <a href="https://scholar.google.com/citations?user=VaYRTxEAAAAJ&hl=zh-CN&oi=ao" target="_blank" title="Google Scholar" aria-label="Google Scholar"><i class="fas fa-graduation-cap" style="color: #4285F4;"></i> <span class="link-label">Google Scholar</span></a>
+                <a href="https://github.com/purshow" target="_blank" title="GitHub" aria-label="GitHub"><i class="fab fa-github" style="color: var(--strong);"></i> <span class="link-label">GitHub</span></a>
+                <a href="https://x.com/purshow04" target="_blank" title="X (Twitter)" aria-label="X (Twitter)"><span class="x-icon" aria-hidden="true"><svg viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48h145.6l100.5 132.9L389.2 48zm-24.8 373.8h39.1L151.1 88h-42L364.4 421.8z"></path></svg></span> <span class="link-label">X (Twitter)</span></a>
+                <a href="https://www.xiaohongshu.com/user/profile/630de7270000000012000eb3?xsec_token=YBZK_W7tvWKkIAr08k9onZX31fFvRF8MedkAZ-mzydIGE=&amp;xsec_source=app_share&amp;&amp;apptime=1778509328&amp;shareRedId=ODkyREg8NkA2NzUyOTgwNjc1OTc0Skg8&amp;share_id=492f35a01f3c4eadbb4c68c10cc1cceb&amp;xhsshare=CopyLink" target="_blank" title="RedNote" aria-label="RedNote"><i class="fas fa-book" style="color: #d23737;"></i> <span class="link-label">RedNote</span></a>
+                <a href="https://www.zhihu.com/people/cao-sheng-fan-ren-90" target="_blank" title="Zhihu" aria-label="Zhihu"><img class="sidebar-icon-img" src="assets/imgs/zhihu.png" alt=""> <span class="link-label">Zhihu</span></a>
+                <a href="assets/imgs/wechat_purshow.jpg" target="_blank" title="WeChat" aria-label="WeChat"><img class="sidebar-icon-img" src="assets/imgs/wechat.png" alt=""> <span class="link-label">WeChat</span></a>
             </div>
         </aside>
 
@@ -1317,17 +1315,6 @@
             });
 
             render();
-        })();
-
-        // Drop the right-edge fade once the contact chips are scrolled to the end.
-        (function () {
-            const strip = document.querySelector('.sidebar-links');
-            function update() {
-                strip.classList.toggle('scrolled-end', strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2);
-            }
-            strip.addEventListener('scroll', update, { passive: true });
-            window.addEventListener('resize', update);
-            update();
         })();
 
         // Click a teaser to view it full size.
